@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Web Scraper
 
-## Getting Started
+A full-stack web application built with Next.js that extracts the main content from any webpage and generates a concise, formatted AI summary.
 
-First, run the development server:
+![Application Screenshot](./public/screenshot-placeholder.png) _(Note: Add a real screenshot of the application here before final submission)_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Intelligent Web Scraping:** Extracts clean, readable text from provided URLs using Mozilla Readability and JSDOM, bypassing navigation menus and footer junk.
+- **AI Summarization:** Utilizes Google's Gemini API (`gemini-3-flash-preview`) to accurately summarize large web articles.
+- **Markdown Rendering:** Displays the AI-generated summary with proper typography, headings, and lists.
+- **Robust Security:** Implements Server-Side Request Forgery (SSRF) protections, payload size limits (5MB), and URL validation.
+- **Modern UI:** Built with React Server Components, Tailwind CSS, and strict TypeScript.
+- **Automated Testing:** Includes Vitest for critical security and validation logic.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Technology Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Scraping:** JSDOM + Mozilla Readability
+- **AI:** Google Gen AI SDK (`@google/genai`)
+- **Validation:** Zod
+- **Testing:** Vitest
 
-## Learn More
+## Architecture and Request Flow
 
-To learn more about Next.js, take a look at the following resources:
+1. **Client:** The user submits a URL via the React frontend (`src/app/page.tsx`).
+2. **Validation:** The frontend performs basic format validation and sends a POST request.
+3. **API Route:** The backend (`src/app/api/summarize/route.ts`) rigorously validates the URL format and hostname (blocking internal IPs).
+4. **Scraper:** The scraper (`src/lib/scraper.ts`) fetches the HTML, aborts if the file is over 5MB, extracts the page title, and isolates the main readable text.
+5. **AI Generation:** The clean text is sent to the Gemini API with strict prompt instructions.
+6. **Response:** The backend returns the title and summary to the frontend, which renders it using `react-markdown`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js (v18 or higher)
+- npm
+- A free Google Gemini API Key
 
-## Deploy on Vercel
+## Setup Instructions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/your-username/ai-web-scraper.git](https://github.com/your-username/ai-web-scraper.git)
+   cd ai-web-scraper
+   ```
