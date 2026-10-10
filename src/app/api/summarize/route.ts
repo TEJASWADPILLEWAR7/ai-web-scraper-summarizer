@@ -3,9 +3,8 @@ import { scrapeWebpage } from "../../../lib/scraper";
 import { GoogleGenAI } from "@google/genai";
 import { urlSchema, isSafeHostname } from "../../../lib/security";
 
-const ai = new GoogleGenAI({});
-
 export async function POST(req: Request) {
+  const ai = new GoogleGenAI({});
   try {
     const body = await req.json();
 
