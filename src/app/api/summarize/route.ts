@@ -65,13 +65,31 @@ export async function POST(req: Request) {
       title: extractedData.title,
     });
   } catch (error: unknown) {
-    console.error("API Error:", error);
+  console.error("API Error:", error);
 
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "An internal server error occurred while processing your request.";
+  const message =
+    error instanceof Error
+      ? error.message
+      : "An unexpected server error occurred.";
 
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
-  }
+  const status =
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    typeof error.status === "number"
+      ? error.status
+      : 500;
+
+  return NextResponse.json(
+    {
+      error:
+        status === 503
+          ? "The AI service is temporarily busy."
+          : message,
+      retryable: status === 503 || status === 429,
+    },
+    {
+      status: status === 503 || status === 429 ? status : 500,
+    },
+  );
 }
